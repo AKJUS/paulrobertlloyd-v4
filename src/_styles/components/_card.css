@@ -1,19 +1,13 @@
 .card {
-  --card-growth: var(--space-inset);
-
   background: var(--color-surface);
-  border-radius: calc(
-    var(--border-radius-small) + calc(var(--card-growth) / 2)
-  );
+  border-radius: var(--border-radius-large);
   color: var(--color-on-surface-variant);
-  container-type: inline-size;
   display: flex;
   flex: 1;
   flex-direction: column;
-  font: var(--font-body);
+  font: var(--font-caption);
   gap: var(--space-stack);
-  margin: calc(var(--card-growth) * -1);
-  padding: var(--card-growth);
+  padding: var(--space-inset);
   position: relative;
   transition-duration: var(--transition-short);
 
@@ -22,11 +16,6 @@
     box-shadow:
       0 0 1vw var(--color-shadow),
       0 0 4vw var(--color-shadow);
-    z-index: 1;
-
-    @media (--from-small-viewport) {
-      --card-growth: calc(var(--space-inset) * 1.5);
-    }
   }
 
   header {
@@ -39,7 +28,6 @@
     color: var(--color-primary-on-surface);
     display: inline-flex;
     flex-wrap: wrap;
-    font: var(--font-caption);
     margin-block-start: auto;
   }
 
@@ -47,10 +35,23 @@
     margin-inline: var(--space-inline);
   }
 
-  a {
+  img {
+    object-fit: cover;
     transition-duration: var(--transition-short);
+    width: 100%;
+  }
 
+  > p {
+    margin-bottom: var(--space-stack);
+  }
+
+  &:hover img {
+    scale: 1.05;
+  }
+
+  a {
     &::before {
+      border-radius: var(--border-radius-large);
       content: "";
       inset: 0;
       position: absolute;
@@ -62,32 +63,12 @@
     }
 
     &:focus::before {
-      border-radius: var(--border-radius-large);
       outline: var(--border-width-focus) solid var(--color-focus);
     }
   }
 
-  img {
-    aspect-ratio: 1;
-    border-radius: var(--border-radius-small);
-    object-fit: cover;
-  }
-
   &[data-type^="article"],
   &[data-type^="presentation"] {
-    &:has(img)::before {
-      aspect-ratio: 3 / 2;
-      background-color: var(--color-primary-on-surface);
-      border-radius: var(--border-radius-small);
-      content: "";
-      display: block;
-      inset: var(--card-growth);
-      opacity: 0.5;
-      position: absolute;
-      transition-duration: var(--transition-short);
-      transition-property: inline-size, inset;
-    }
-
     img {
       aspect-ratio: 3 / 2;
       filter: contrast(0.75) brightness(1.25);
@@ -96,13 +77,27 @@
   }
 
   &[data-type^="photo"] {
-    background: var(--color-inverse-surface);
-    color: var(--color-on-inverse-surface);
-
-    footer {
-      color: inherit;
+    img {
+      aspect-ratio: 1;
     }
 
+    footer {
+      align-items: end;
+      background: linear-gradient(
+        transparent,
+        transparent 80%,
+        var(--color-inverse-surface) 100%
+      );
+      border-end-end-radius: var(--border-radius-large);
+      border-end-start-radius: var(--border-radius-large);
+      color: var(--color-on-inverse-surface);
+      inset: 0;
+      padding: var(--space-inset);
+      position: absolute;
+      text-shadow: 0 0 2px var(--color-inverse-surface);
+    }
+
+    &:hover,
     a:hover {
       color: var(--color-on-inverse-surface-bright);
     }
@@ -112,5 +107,18 @@
     img {
       aspect-ratio: 5 / 2;
     }
+  }
+}
+
+.card__image {
+  background-color: var(--color-primary-on-surface);
+  clip-path: inset(0 round var(--border-radius-large));
+  margin: calc(var(--space-inset) * -1);
+
+  &:has(+ header) {
+    clip-path: inset(
+      0 0 var(--space-inset) 0 round var(--border-radius-large)
+        var(--border-radius-large) 0 0
+    );
   }
 }
